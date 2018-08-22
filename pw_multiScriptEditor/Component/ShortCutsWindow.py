@@ -4,7 +4,9 @@ import os
 from Qt import QtCore
 from Qt import QtCompat
 from Qt import QtWidgets
-from load_ui_type import load_ui_type
+
+from utils.load_ui_type import load_ui_type
+from utils.get_docs_content import get_docs_content
 
 UI = os.path.join(os.path.dirname(__file__), "shortcutsView.ui")
 FormClass, BaseClass = load_ui_type(UI)
@@ -23,7 +25,7 @@ class ShortCutsWindow(FormClass, BaseClass):
         self.read()
 
     def read(self):
-        src = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'shortcuts.txt')
+        src = get_docs_content('shortcuts.txt')
         if os.path.exists(src):
             self.label.hide()
             lines = open(src).readlines()

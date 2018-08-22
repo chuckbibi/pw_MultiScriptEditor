@@ -6,11 +6,11 @@ from Qt import QtGui
 from Qt import QtWidgets
 
 import jedi
-
-import settingsManager
 import managers
-from Component.pythonSyntax import design
-from Component.pythonSyntax import syntaxHighLighter
+
+from utils import settingsManager
+from pythonSyntax import design
+from pythonSyntax import syntaxHighLighter
 
 from CompleteWidget import CompleteListWidget
 

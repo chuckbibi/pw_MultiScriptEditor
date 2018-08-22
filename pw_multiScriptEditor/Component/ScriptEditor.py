@@ -8,22 +8,23 @@ import webbrowser
 from Qt import QtCore
 from Qt import QtGui
 from Qt import QtWidgets
-from load_ui_type import load_ui_type
 
-from widgets.PagingLabelWidget import PagingLabelWidget
-from widgets.OutputWindow import OutputWindow
+from PagingLabelWidget import PagingLabelWidget
+from OutputWindow import OutputWindow
 
 from SearchWindow import SearchWindow
 from AboutWindow import AboutWindow
 from ShortCutsWindow import ShortCutsWindow
 from ThemeEditorWindow import ThemeEditorWindow
 
-from pythonSyntax import design
-import sessionManager
-import settingsManager
 import managers
+from pythonSyntax import design
+from utils import sessionManager
+from utils import settingsManager
 
-from icons import icons as icons_config
+from utils.load_ui_type import load_ui_type
+from utils.get_docs_content import get_docs_content
+from utils.get_image_path import get_image_path
 
 if managers._s == 'w':
     import ctypes
@@ -66,9 +67,9 @@ class ScriptEditor(FormClass, BaseClass):
                               'self_help': self.mse_help,
                               'self_context': managers.context})
         self.session = sessionManager.sessionManagerClass()
-        self.execAll_act.setIcon(QtGui.QIcon(icons_config['all']))
-        self.execSel_act.setIcon(QtGui.QIcon(icons_config['sel']))
-        self.clearHistory_act.setIcon(QtGui.QIcon(icons_config['clear']))
+        self.execAll_act.setIcon(QtGui.QIcon(get_image_path('all')))
+        self.execSel_act.setIcon(QtGui.QIcon(get_image_path('sel')))
+        self.clearHistory_act.setIcon(QtGui.QIcon(get_image_path('clear')))
         self.toolBar.setIconSize(QtCore.QSize(32, 32))
         self.menubar.setNativeMenuBar(False)
         # connects
@@ -149,7 +150,7 @@ class ScriptEditor(FormClass, BaseClass):
         self.saveSession()
 
     def mse_help(self):
-        src = os.path.join(os.path.dirname(__file__), 'helpText.txt')
+        src = get_docs_content('helpText.txt')
         if os.path.exists(src):
             txt = open(src).read() % self.ver
         else:
@@ -216,7 +217,7 @@ class ScriptEditor(FormClass, BaseClass):
         qss = os.path.join(os.path.abspath(os.path.abspath(".")), 'style', 'style.css')
         if os.path.exists(qss):
             self.setStyleSheet(open(qss).read())
-            self.setWindowIcon(QtGui.QIcon(icons_config['pw']))
+            self.setWindowIcon(QtGui.QIcon(get_image_path('pw')))
 
     def loadSession(self):
         sessions = self.session.readSession()

@@ -1,6 +1,11 @@
 # coding=utf8
 
-from Component.ScriptEditor import ScriptEditor
+import sys
+sys.path.append("./pyLibs")
+sys.path.append("./Component")
+sys.path.append("./Component.widgets")
+
+from ScriptEditor import ScriptEditor
 from Qt import QtWidgets
 
 

@@ -1,1 +1,0 @@
-start c:\python27\python.exe runScriptEditor.py %*

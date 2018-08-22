@@ -4,12 +4,12 @@ import os
 from Qt import QtCore
 from Qt import QtGui
 from Qt import QtWidgets
-from load_ui_type import load_ui_type
 
-import settingsManager
-from Component.pythonSyntax import design
+from pythonSyntax import design
+from utils.load_ui_type import load_ui_type
+from utils import settingsManager
 
-import Component.widgets.InputWindow
+from InputWindow import InputWindow
 
 UI = os.path.join(os.path.dirname(__file__), "themeEditor.ui")
 FormClass, BaseClass = load_ui_type(UI)
@@ -22,7 +22,7 @@ class ThemeEditorWindow(FormClass, BaseClass):
         # setup ui
         self.setupUi(self)
 
-        self.preview_twd = Component.widgets.InputWindow.InputWindow(self, desk)
+        self.preview_twd = InputWindow(self, desk)
         self.preview_ly.addWidget(self.preview_twd)
         self.preview_twd.setPlainText(defaultText)
         self.splitter.setSizes([200, 300])
