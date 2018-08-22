@@ -1,46 +1,52 @@
-import traceback
-import sys
-import webbrowser
+# coding=utf8
+
 import os
+import sys
+import traceback
+import webbrowser
 
-from Qt import QtCore, QtGui, QtWidgets
+from Qt import QtCore
+from Qt import QtGui
+from Qt import QtWidgets
+from load_ui_type import load_ui_type
 
-from widgets import scriptEditor_UIs as ui
-from widgets import tabWidget, outputWidget, about, shortcuts, themeEditor, findWidget
+from widgets.PagingLabelWidget import PagingLabelWidget
+from widgets.OutputWindow import OutputWindow
 
-reload(tabWidget)
-reload(outputWidget)
-reload(ui)
-reload(themeEditor)
-reload(findWidget)
+from SearchWindow import SearchWindow
+from AboutWindow import AboutWindow
+from ShortCutsWindow import ShortCutsWindow
+from ThemeEditorWindow import ThemeEditorWindow
 
-from widgets.pythonSyntax import design
+from pythonSyntax import design
 import sessionManager
 import settingsManager
 import managers
 
-reload(managers)
+from icons import icons as icons_config
 
 if managers._s == 'w':
     import ctypes
-
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID('paulwinex.multiscripteditor.1.0')
 
-import icons_rcs
-from icons import icons as icons_config
+UI = os.path.join(os.path.dirname(__file__), "scriptEditor.ui")
+FormClass, BaseClass = load_ui_type(UI)
 
 
-class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
+class ScriptEditor(FormClass, BaseClass):
     def __init__(self, parent=None):
-        QtWidgets.QMainWindow.__init__(self, parent)
-        # ui
-        self.ver = '2.0.4'
-        self.tab = tabWidget.tabWidgetClass(self)
+        super(ScriptEditor, self).__init__(parent)
+
+        # setup ui
         self.setupUi(self)
+
+        self.ver = '2.0.4'
+        self.tab = PagingLabelWidget(self)
         self.setWindowTitle('pw Multi Script Editor v%s' % self.ver)
         self.setObjectName('pw_scriptEditor')
+
         # widgets
-        self.out = outputWidget.outputClass()
+        self.out = OutputWindow()
 
         self.out_ly.addWidget(self.out)
         self.in_ly.addWidget(self.tab)
@@ -207,7 +213,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         self.s.writeSettings(s)
 
     def setWindowStyle(self):
-        qss = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'style', 'style.css')
+        qss = os.path.join(os.path.abspath(os.path.abspath(".")), 'style', 'style.css')
         if os.path.exists(qss):
             self.setStyleSheet(open(qss).read())
             self.setWindowIcon(QtGui.QIcon(icons_config['pw']))
@@ -370,7 +376,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
             self.out.showMessage('>>> Not created!')
 
     def openThemeEditor(self):
-        self.dial = themeEditor.themeEditorClass(self, self.tab.desk)
+        self.dial = ThemeEditorWindow(self, self.tab.desk)
         self.dial.exec_()
         self.fillThemeMenu()
 
@@ -395,15 +401,15 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         webbrowser.open(links[name])
 
     def about(self):
-        dial = about.aboutClass(self)
+        dial = AboutWindow(self)
         dial.exec_()
 
     def shortcuts(self):
-        dial = shortcuts.shortcutsClass(self)
+        dial = ShortCutsWindow(self)
         dial.exec_()
 
     def findWidget(self):
-        w = findWidget.findWidgetClass(self.out)
+        w = SearchWindow(self.out)
         w.searchSignal.connect(self.tab.search)
         w.replaceSignal.connect(self.tab.replace)
         w.replaceAllSignal.connect(self.tab.replaceAll)

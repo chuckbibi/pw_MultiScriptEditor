@@ -1,13 +1,12 @@
 # coding=utf8
 
-# from scriptEditor import scriptEditorClass
-from widgets.scriptEditor import scriptEditorClass
+from Component.ScriptEditor import ScriptEditor
 from Qt import QtWidgets
 
 
 def main():
     app = QtWidgets.QApplication([])
-    window = scriptEditorClass()
+    window = ScriptEditor()
     window.setWindowStyle()
     window.show()
     app.exec_()

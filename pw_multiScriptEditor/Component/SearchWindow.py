@@ -1,20 +1,32 @@
-from Qt import QtCore, QtWidgets
-import findWidget_UIs as ui
+# coding=utf8
 
-class findWidgetClass(QtWidgets.QWidget, ui.Ui_findReplace):
+import os
+from Qt import QtCore
+from Qt import QtWidgets
+from load_ui_type import load_ui_type
+
+UI = os.path.join(os.path.dirname(__file__), "searchWidget.ui")
+FormClass, BaseClass = load_ui_type(UI)
+
+
+class SearchWindow(FormClass, BaseClass):
     searchSignal = QtCore.Signal(str)
     replaceSignal = QtCore.Signal(list)
     replaceAllSignal = QtCore.Signal(list)
-    def __init__(self, parent):
-        super(findWidgetClass, self).__init__(parent)
+
+    def __init__(self, parent=None):
+        super(SearchWindow, self).__init__(parent)
+
+        # setup ui
         self.setupUi(self)
+
         self.setWindowFlags(QtCore.Qt.Tool)
         center = parent.parent().mapToGlobal(parent.geometry().center())
         myGeo = self.geometry()
         myGeo.moveCenter(center)
         self.setGeometry(myGeo)
         self.find_le.setFocus()
-        #connect
+        # connect
         self.find_btn.clicked.connect(self.search)
         self.find_le.returnPressed.connect(self.search)
         self.replace_btn.clicked.connect(self.replace)
