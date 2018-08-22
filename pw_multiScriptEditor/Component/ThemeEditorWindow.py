@@ -6,8 +6,10 @@ from Qt import QtGui
 from Qt import QtWidgets
 
 from pythonSyntax import design
-from utils.load_ui_type import load_ui_type
+
 from utils import settingsManager
+from utils.load_ui_type import load_ui_type
+from utils.get_style_path import get_style_path
 
 from InputWindow import InputWindow
 
@@ -166,7 +168,7 @@ class ThemeEditorWindow(FormClass, BaseClass):
         if event.key() == QtCore.Qt.Key_Escape:
             event.ignore()
         else:
-            super(themeEditorClass, self).keyPressEvent(event)
+            super(ThemeEditorWindow, self).keyPressEvent(event)
 
     def current(self):
         pass
@@ -199,12 +201,3 @@ class Foo:
 x = len('abc')
 print(f.__doc__)
 '''
-
-if __name__ == '__main__':
-    app = QtWidgets.QApplication([])
-    w = themeEditorClass()
-    w.show()
-    qss = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'style', 'style.css')
-    if os.path.exists(qss):
-        w.setStyleSheet(open(qss).read())
-    app.exec_()

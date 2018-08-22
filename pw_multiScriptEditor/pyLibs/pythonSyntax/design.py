@@ -1,8 +1,12 @@
-from utils import settingsManager
+# coding=utf8
+
 import os
 import re
 
-EditorStyle = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'style', 'completer.qss')
+from utils import settingsManager
+from utils.get_style_path import get_style_path
+
+EditorStyle = get_style_path('completer.qss')
 if not os.path.exists(EditorStyle):
     EditorStyle = None
 

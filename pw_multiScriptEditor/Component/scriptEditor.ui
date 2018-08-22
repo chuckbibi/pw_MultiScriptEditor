@@ -57,7 +57,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="file_menu">
@@ -78,9 +78,8 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="openManual_act"/>
+    <addaction name="openHomePage_act"/>
     <addaction name="shortcuts_act"/>
-    <addaction name="donate_act"/>
     <addaction name="separator"/>
     <addaction name="printHelp_act"/>
     <addaction name="about_act"/>
@@ -174,9 +173,9 @@
     <string>Exit</string>
    </property>
   </action>
-  <action name="openManual_act">
+  <action name="openHomePage_act">
    <property name="text">
-    <string>Manual</string>
+    <string>Home Page</string>
    </property>
   </action>
   <action name="quickHelp_act">

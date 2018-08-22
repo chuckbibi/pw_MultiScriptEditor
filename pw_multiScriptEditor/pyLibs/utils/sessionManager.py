@@ -1,6 +1,9 @@
+# coding=utf8
+
 from __future__ import with_statement
-import json
+
 import os
+import json
 import codecs
 import settingsManager
 

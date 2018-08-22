@@ -8,7 +8,9 @@ from Qt import QtWidgets
 from LineBarWidget import LineBarWidget
 from InputWindow import InputWindow
 
-style = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'style', 'completer.qss')
+from utils.get_style_path import get_style_path
+
+style = get_style_path('completer.qss')
 if not os.path.exists(style):
     style = None
 

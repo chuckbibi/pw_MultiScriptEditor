@@ -1,9 +1,12 @@
+# coding=utf8
+
 import json
 import os
 import codecs
 from managers import context
 
 settingsFilename = 'pw_scriptEditor_pref.json'
+
 
 def userPrefFolder():
     appData = None
@@ -18,13 +21,14 @@ def userPrefFolder():
         appData = os.path.dirname(MaxPlus.PathManager.GetTempDir())
     if not appData:
         appData = os.getenv('HOME') or os.path.expanduser('~')
-    return  appData
+    return appData
+
 
 def settingsFile():
-    path = os.path.normpath(os.path.join(userPrefFolder(), settingsFilename)).replace('\\','/')
+    path = os.path.normpath(os.path.join(userPrefFolder(), settingsFilename)).replace('\\', '/')
     if not os.path.exists(path):
-                with open(path, 'w') as f:
-                    f.write('[]')
+        with open(path, 'w') as f:
+            f.write('[]')
     return path
 
 
@@ -49,4 +53,3 @@ class scriptEditorClass(object):
     def defaults(self):
         return dict(geometry=None,
                     outFontSize=8)
-

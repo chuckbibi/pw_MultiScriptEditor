@@ -25,6 +25,7 @@ from utils import settingsManager
 from utils.load_ui_type import load_ui_type
 from utils.get_docs_content import get_docs_content
 from utils.get_image_path import get_image_path
+from utils.get_style_path import get_style_path
 
 if managers._s == 'w':
     import ctypes
@@ -32,6 +33,8 @@ if managers._s == 'w':
 
 UI = os.path.join(os.path.dirname(__file__), "scriptEditor.ui")
 FormClass, BaseClass = load_ui_type(UI)
+
+LINK = {"HomePage": ""}
 
 
 class ScriptEditor(FormClass, BaseClass):
@@ -81,8 +84,7 @@ class ScriptEditor(FormClass, BaseClass):
         self.saveSeccion_act.triggered.connect(lambda: self.saveSession(True))
         self.settingsFile_act.triggered.connect(self.openSettingsFile)
         self.splitter.splitterMoved.connect(self.adjustColmpeters)
-        self.donate_act.triggered.connect(lambda: self.openLink('donate'))
-        self.openManual_act.triggered.connect(lambda: self.openLink('manual'))
+        self.openHomePage_act.triggered.connect(lambda: self.openLink('HomePage'))
         self.about_act.triggered.connect(self.about)
         self.shortcuts_act.triggered.connect(self.shortcuts)
         self.printHelp_act.triggered.connect(self.mse_help)
@@ -136,12 +138,11 @@ class ScriptEditor(FormClass, BaseClass):
         self.clearHistory_act.triggered.connect(self.clearHistory)
 
         # hide
-        self.donate_act.setVisible(False)
+        self.openHomePage_act.setVisible(False)
 
         # start
         self.loadSession()
         self.loadSettings()
-        # self.out.showMessage('Multi Script Editor v.%s Loaded\npaulwinex.com' % self.ver)
         self.tab.widget(0).edit.setFocus()
         self.appContextMenu()
         self.addArgs()
@@ -214,7 +215,7 @@ class ScriptEditor(FormClass, BaseClass):
         self.s.writeSettings(s)
 
     def setWindowStyle(self):
-        qss = os.path.join(os.path.abspath(os.path.abspath(".")), 'style', 'style.css')
+        qss = get_style_path('style.css')
         if os.path.exists(qss):
             self.setStyleSheet(open(qss).read())
             self.setWindowIcon(QtGui.QIcon(get_image_path('pw')))
@@ -398,8 +399,7 @@ class ScriptEditor(FormClass, BaseClass):
         QtWidgets.QMainWindow.resizeEvent(self, event)
 
     def openLink(self, name):
-        from style.links import links
-        webbrowser.open(links[name])
+        webbrowser.open(LINK.get(name))
 
     def about(self):
         dial = AboutWindow(self)

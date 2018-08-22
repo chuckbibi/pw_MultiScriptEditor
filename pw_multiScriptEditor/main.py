@@ -1,9 +1,11 @@
 # coding=utf8
 
+import os
 import sys
-sys.path.append("./pyLibs")
-sys.path.append("./Component")
-sys.path.append("./Component.widgets")
+cur_dir = os.path.dirname(__file__)
+sys.path.append(os.path.join(cur_dir, "pyLibs"))
+sys.path.append(os.path.join(cur_dir, "Component"))
+sys.path.append(os.path.join(cur_dir, "Component/widgets"))
 
 from ScriptEditor import ScriptEditor
 from Qt import QtWidgets
