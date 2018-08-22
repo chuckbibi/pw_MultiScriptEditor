@@ -1,4 +1,8 @@
-import os, sys
+# coding=utf8
+
+import os
+import sys
+
 
 # HOUDINI
 def showHoudini(clear=False, ontop=False, name=None, floating=False, position=(), size=(),
@@ -11,22 +15,24 @@ def showHoudini(clear=False, ontop=False, name=None, floating=False, position=()
     _houdini.show(clear=clear, ontop=ontop, name=name, floating=floating, position=position,
                   size=size, pane=pane, replacePyPanel=replacePyPanel, hideTitleMenu=hideTitleMenu)
 
+
 # NUKE
 def showNuke(panel=False):
-    from .managers import _nuke
+    from managers import _nuke
     reload(_nuke)
     _nuke.show(panel)
 
 
 # MAYA
 def showMaya(dock=False):
-    from .managers import _maya
+    from managers import _maya
     reload(_maya)
     _maya.show(dock)
+
 
 # 3DSMAX PLUS
 def show3DSMax():
     sys.argv = []
-    from .managers import _3dsmax
+    from managers import _3dsmax
     reload(_3dsmax)
     _3dsmax.show()

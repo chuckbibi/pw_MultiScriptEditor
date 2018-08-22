@@ -5,8 +5,8 @@ import os
 
 from Qt import QtCore, QtGui, QtWidgets
 
-from .widgets import scriptEditor_UIs as ui
-from .widgets import tabWidget, outputWidget, about, shortcuts, themeEditor, findWidget
+from widgets import scriptEditor_UIs as ui
+from widgets import tabWidget, outputWidget, about, shortcuts, themeEditor, findWidget
 
 reload(tabWidget)
 reload(outputWidget)
@@ -14,18 +14,20 @@ reload(ui)
 reload(themeEditor)
 reload(findWidget)
 
-from .widgets.pythonSyntax import design
-from . import sessionManager
-from . import settingsManager
-from . import managers
+from widgets.pythonSyntax import design
+import sessionManager
+import settingsManager
+import managers
+
 reload(managers)
 
 if managers._s == 'w':
     import ctypes
+
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID('paulwinex.multiscripteditor.1.0')
 
 import icons_rcs
-from .icons import *
+from icons import icons as icons_config
 
 
 class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
@@ -44,25 +46,24 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         self.in_ly.addWidget(self.tab)
 
         for m in self.file_menu, self.tools_menu, self.options_menu, self.run_menu, self.help_menu:
-            m.setWindowTitle('MSE '+self.ver)
+            m.setWindowTitle('MSE ' + self.ver)
 
-
-        #variables
+        # variables
         self.s = settingsManager.scriptEditorClass()
         # self.namespace = {}
         self.namespace = __import__('__main__').__dict__
         self.dial = None
 
-        self.updateNamespace({'self_main':self,
-                              'self_version':self.ver,
+        self.updateNamespace({'self_main': self,
+                              'self_version': self.ver,
                               'self_output': self.out,
                               'self_help': self.mse_help,
-                              'self_context':managers.context})
+                              'self_context': managers.context})
         self.session = sessionManager.sessionManagerClass()
-        self.execAll_act.setIcon(QtGui.QIcon(icons['all']))
-        self.execSel_act.setIcon(QtGui.QIcon(icons['sel']))
-        self.clearHistory_act.setIcon(QtGui.QIcon(icons['clear']))
-        self.toolBar.setIconSize(QtCore.QSize(32,32))
+        self.execAll_act.setIcon(QtGui.QIcon(icons_config['all']))
+        self.execSel_act.setIcon(QtGui.QIcon(icons_config['sel']))
+        self.clearHistory_act.setIcon(QtGui.QIcon(icons_config['clear']))
+        self.toolBar.setIconSize(QtCore.QSize(32, 32))
         self.menubar.setNativeMenuBar(False)
         # connects
 
@@ -70,11 +71,11 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         self.load_act.triggered.connect(self.loadScript)
         self.exit_act.triggered.connect(self.close)
         self.tabToSpaces_act.triggered.connect(self.tabsToSpaces)
-        self.saveSeccion_act.triggered.connect(lambda:self.saveSession(True))
+        self.saveSeccion_act.triggered.connect(lambda: self.saveSession(True))
         self.settingsFile_act.triggered.connect(self.openSettingsFile)
         self.splitter.splitterMoved.connect(self.adjustColmpeters)
-        self.donate_act.triggered.connect(lambda :self.openLink('donate'))
-        self.openManual_act.triggered.connect(lambda :self.openLink('manual'))
+        self.donate_act.triggered.connect(lambda: self.openLink('donate'))
+        self.openManual_act.triggered.connect(lambda: self.openLink('manual'))
         self.about_act.triggered.connect(self.about)
         self.shortcuts_act.triggered.connect(self.shortcuts)
         self.printHelp_act.triggered.connect(self.mse_help)
@@ -105,15 +106,15 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         self.find_act.setShortcutContext(QtCore.Qt.WindowShortcut)
 
         self.comment_cat.triggered.connect(self.tab.comment)
-        self.comment_cat.setShortcut(QtGui.QKeySequence( QtCore.Qt.ALT+QtCore.Qt.Key_Q))
+        self.comment_cat.setShortcut(QtGui.QKeySequence(QtCore.Qt.ALT + QtCore.Qt.Key_Q))
         self.comment_cat.setShortcutContext(QtCore.Qt.WidgetShortcut)
 
         self.fillThemeMenu()
 
-        #shortcuts
+        # shortcuts
         if managers.context == 'nuke':
             import nuke
-            if nuke.NUKE_VERSION_MAJOR>8:
+            if nuke.NUKE_VERSION_MAJOR > 8:
                 self.execSel_act.setShortcut('Ctrl+Return')
                 self.execSel_act.setShortcutContext(QtCore.Qt.ApplicationShortcut)
 
@@ -130,7 +131,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         # hide
         self.donate_act.setVisible(False)
 
-        #start
+        # start
         self.loadSession()
         self.loadSettings()
         # self.out.showMessage('Multi Script Editor v.%s Loaded\npaulwinex.com' % self.ver)
@@ -148,7 +149,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         else:
             txt = '<h3>File not found: helpText.txt</h3><br>'
         old = self.out.toPlainText().replace('\n', '<br>')
-        self.out.setHtml(old+txt)
+        self.out.setHtml(old + txt)
         self.out.moveCursor(QtGui.QTextCursor.End)
         self.out.ensureCursorVisible()
 
@@ -176,8 +177,8 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
                     if os.path.exists(f):
                         if not os.path.basename(f) == os.path.basename(__file__):
                             if os.path.splitext(f)[-1] in ['.txt', '.py']:
-                                self.out.showMessage( os.path.splitext(f)[-1])
-                                self.out.showMessage('Open File: '+f)
+                                self.out.showMessage(os.path.splitext(f)[-1])
+                                self.out.showMessage('Open File: ' + f)
                                 text = open(f).read()
                                 self.tab.addNewTab(os.path.basename(f), text)
 
@@ -197,19 +198,19 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
             qss = design.editorStyle(name)
             # text color
             w.edit.applyHightLighter(name)
-            #completer
+            # completer
             w.edit.completer.setStyleSheet(qss)
-            #editor
+            # editor
             w.edit.setStyleSheet(qss)
         s = self.s.readSettings()
         s['theme'] = name
         self.s.writeSettings(s)
 
     def setWindowStyle(self):
-        qss = os.path.join(os.path.abspath(os.path.dirname(__file__)),'style', 'style.css')
+        qss = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'style', 'style.css')
         if os.path.exists(qss):
             self.setStyleSheet(open(qss).read())
-            self.setWindowIcon(QtGui.QIcon(icons['pw']))
+            self.setWindowIcon(QtGui.QIcon(icons_config['pw']))
 
     def loadSession(self):
         sessions = self.session.readSession()
@@ -217,7 +218,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         active = 0
         if sessions:
             for i, s in enumerate(sessions):
-                w= self.tab.addNewTab(s['name'], s['text'])
+                w = self.tab.addNewTab(s['name'], s['text'])
                 if s['active']:
                     active = i
                 w.setFontSize(s.get('size', 10))
@@ -226,7 +227,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         self.tab.setCurrentIndex(active)
 
     def saveSession(self, verbos=False):
-        tabs= []
+        tabs = []
         index = self.tab.currentIndex()
         for item in range(self.tab.count()):
             name = self.tab.tabText(item)
@@ -235,14 +236,14 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
                 size = self.tab.widget(item).edit.fs
             else:
                 size = self.tab.widget(item).edit.font().pointSize()
-            tab = {'name':name,
-                   'text':text,
+            tab = {'name': name,
+                   'text': text,
                    'active': item == index,
                    'size': size}
             tabs.append(tab)
         path = self.session.writeSession(tabs)
         if verbos:
-            self.out.showMessage('>>> Session saved: %s' % path.replace('\\','/'))
+            self.out.showMessage('>>> Session saved: %s' % path.replace('\\', '/'))
 
     def executeAll(self):
         allText = self.tab.getCurrentText()
@@ -267,6 +268,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
     def runCommand(self, command=None):
         if command:
             tmp_stdout = sys.stdout
+
             class stdoutProxy():
                 def __init__(self, write_func):
                     self.write_func = write_func
@@ -306,7 +308,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         d = os.getenv('HOME')
         if not d:
             d = os.path.expanduser('~')
-        path = QtWidgets.QFileDialog.getSaveFileName (self, 'Save script', d, "PY Files (*.py)")
+        path = QtWidgets.QFileDialog.getSaveFileName(self, 'Save script', d, "PY Files (*.py)")
         if path[0]:
             try:
                 with open(path[0], 'w') as f:
@@ -326,7 +328,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
 
     def tabsToSpaces(self):
         text = self.tab.getCurrentText()
-        text = text.replace('\t','    ')
+        text = text.replace('\t', '    ')
         self.tab.setCurrentText(text)
 
     def insertText(self, text):
@@ -340,9 +342,9 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         if data.get('center'):
             x, y = data.get('center')
             geo = self.geometry()
-            geo.moveCenter(QtCore.QPoint(x,y))
+            geo.moveCenter(QtCore.QPoint(x, y))
             self.setGeometry(geo)
-        f =  self.out.font()
+        f = self.out.font()
         f.setPointSize(data['outFontSize'])
         self.out.setFont(f)
 
@@ -350,7 +352,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         settings = self.s.readSettings()
         geo = self.geometry()
         sGeo = [geo.x(), geo.y(), geo.width(), geo.height()]
-        center = [geo.center().x(),geo.center().y()]
+        center = [geo.center().x(), geo.center().y()]
         size = max(8, self.out.font().pointSize())
         data = dict(geometry=sGeo,
                     center=center,
@@ -360,7 +362,7 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
 
     def openSettingsFile(self):
         path = settingsManager.userPrefFolder()
-        self.out.showMessage('>>> Settings folder: %s' % path.replace('\\','/'))
+        self.out.showMessage('>>> Settings folder: %s' % path.replace('\\', '/'))
 
         if os.path.exists(path):
             self.openFolder(path)
@@ -388,7 +390,6 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
         # super(scriptEditorClass, self).resizeEvent(event)
         QtWidgets.QMainWindow.resizeEvent(self, event)
 
-
     def openLink(self, name):
         from style.links import links
         webbrowser.open(links[name])
@@ -414,11 +415,11 @@ class scriptEditorClass(QtWidgets.QMainWindow, ui.Ui_scriptEditor):
             os.startfile(path)
         elif os.name == 'posix':
             os.system('xdg-open "%s"' % path)
-        elif os.name =='os2':
+        elif os.name == 'os2':
             os.system('open "%s"' % path)
+
 
 try:
     QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName("UTF-8"))
 except:
     pass
-

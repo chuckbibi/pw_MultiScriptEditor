@@ -2,7 +2,7 @@
 from Qt import QtCore, QtGui, QtWidgets
 
 
-from .. import managers
+import managers
 
 class outputClass(QtWidgets.QTextBrowser):
     def __init__(self):
