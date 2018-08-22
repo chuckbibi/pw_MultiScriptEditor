@@ -43,10 +43,3 @@ Icon
 
 # Test file
 *_test.py
-/test/
-/apps/strack_desktop/StrackLog
-apps/strack_desktop/StrackLog
-apps/strack_im/ChatConnector2.py
-apps/strack_im/StrackLog
-pyLibs/__pycache__/
-stdLibs/std_qt/__pycache__/
